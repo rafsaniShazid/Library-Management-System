@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -44,5 +45,29 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the borrows for the user.
+     */
+    public function borrows()
+    {
+        return $this->hasMany(Borrow::class);
+    }
+
+    /**
+     * Get the currently borrowed books for the user.
+     */
+    public function currentlyBorrowedBooks()
+    {
+        return $this->hasMany(Borrow::class)->where('status', 'borrowed');
+    }
+
+    /**
+     * Check if user is admin.
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
     }
 }
