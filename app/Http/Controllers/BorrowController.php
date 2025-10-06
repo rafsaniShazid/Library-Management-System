@@ -35,6 +35,23 @@ class BorrowController extends Controller
     return back()->with('status','Borrowed!');
 }
 
+public function return(string $borrowId)
+{
+    $borrow = Borrow::with('book')->findOrFail($borrowId);
+
+    if ($borrow->status === 'returned') {
+        return back()->withErrors(['return' => 'Already returned.']);
+    }
+
+    $borrow->update([
+        'status'      => 'returned',
+        'return_date' => now(),
+    ]);
+
+    $borrow->book->increment('available_copies');
+
+    return back()->with('status','Returned!');
+}
    /* public function destroy(string $borrowId){
         return back();
         */
