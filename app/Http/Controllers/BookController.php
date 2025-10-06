@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Models\Borrow;
 
 class BookController extends Controller
 {
@@ -53,7 +54,8 @@ class BookController extends Controller
      */
     public function edit(string $id)
     {
-        return view('books.form');
+        $book=Book::findOrFail($id);
+        return view('books.form', compact('book'));
     }
 
     /**
@@ -61,7 +63,16 @@ class BookController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        return redirect()->route('books.index');
+       $book=Book::findOrFail($id);
+         $data=$request->validate([
+            'title'=>['required|string|max:255'],
+            'author'=>['required|string|max:255'],
+            'category'=>['required|string|max:255'],
+            'total_copies'=>['required|integer|min:1'],
+            'available_copies'=>['nullable|integer|min:0','lte:total_copies'],
+         ]);
+         $book->update($data);
+        return redirect()->route('books.index')->with('status','Book updated successfully!');
     }
 
     /**
@@ -69,6 +80,12 @@ class BookController extends Controller
      */
     public function destroy(string $id)
     {
-        return redirect()->route('books.index');
+        $book= Book::findOrFail($id);
+        $hasActive= Borrow::where('book_id',$book->id)->where('status','borrowed')->exists();
+        if($hasActive){
+            return back()->withErrors(['book'=>'Cannot delete book with active borrow records.']);
+        }
+        $book->delete();
+        return redirect()->route('books.index')->with('status','Book deleted successfully!');
     }
 }
