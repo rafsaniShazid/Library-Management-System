@@ -40,7 +40,8 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        abort(404);
+        $book = Book::with('borrows.user')->findOrFail($id);
+        return view('books.show', compact('book'));
     }
 
     /**
