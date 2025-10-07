@@ -15,6 +15,16 @@
     form.inline { display:inline; margin:0; }
     .btn { padding:6px 10px; border:1px solid #ddd; border-radius:6px; background:#fafafa; cursor:pointer; }
     .btn:focus { outline: 2px solid #000; }
+    @media (max-width: 640px) {
+  table, thead, tbody, th, td, tr { display: block; }
+  thead { display: none; }
+  tr { margin-bottom: 12px; border:1px solid #eee; border-radius:8px; }
+  td { border: none; padding:8px 12px; }
+  td::before { font-weight:600; display:block; margin-bottom:2px; }
+  /* optional: add labels via data attributes if you want */
+}
+.btn:focus { outline:2px solid #111; outline-offset:1px; }
+
   </style>
 </head>
 <body>
