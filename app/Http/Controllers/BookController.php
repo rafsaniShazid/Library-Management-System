@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\StoreBookRequest;
+use App\Http\Requests\UpdateBookRequest;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Models\Borrow;
@@ -28,18 +29,11 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-       $data=$request->validate([
-        'title'=>['required|string|max:255'],
-        'author'=>['required|string|max:255'],
-        'category'=>['required|string|max:255'],
-        'total_copies'=>['required|integer|min:1'],
-        'available_copies'=>['nullable|integer|min:0','lte:total_copies'],
-       ]);
-       Book::create($data);
-       return redirect()->route('books.index')->with('status','Book created successfully!');
-    }
+    public function store(StoreBookRequest $request)
+{
+    Book::create($request->validated());
+    return redirect()->route('books.index')->with('status','Book created successfully!');
+}
 
     /**
      * Display the specified resource.
@@ -61,25 +55,18 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-       $book=Book::findOrFail($id);
-         $data=$request->validate([
-            'title'=>['required|string|max:255'],
-            'author'=>['required|string|max:255'],
-            'category'=>['required|string|max:255'],
-            'total_copies'=>['required|integer|min:1'],
-            'available_copies'=>['nullable|integer|min:0','lte:total_copies'],
-         ]);
-         $book->update($data);
-        return redirect()->route('books.index')->with('status','Book updated successfully!');
-    }
+    public function update(UpdateBookRequest $request, string $id)
+{
+    $book = Book::findOrFail($id);
+    $book->update($request->validated());
+    return redirect()->route('books.index')->with('status','Book updated successfully!');
+}
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
+/**
+ * Remove the specified resource from storage.
+ */
+public function destroy(string $id)
+{
         $book= Book::findOrFail($id);
         $hasActive= Borrow::where('book_id',$book->id)->where('status','borrowed')->exists();
         if($hasActive){
