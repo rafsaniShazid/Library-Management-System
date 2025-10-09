@@ -10,6 +10,11 @@ class BorrowController extends Controller
 {
  
     public function index(){
+        // Redirect admin users to books management
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('books.index')->with('status', 'Admins cannot view borrow history. Manage books instead.');
+        }
+
         // Get only the authenticated user's borrows
         $borrows = Borrow::where('user_id', auth()->id())
             ->with('book')
@@ -21,6 +26,11 @@ class BorrowController extends Controller
   
 
     public function store(string $bookId){
+        // Prevent admin users from borrowing books
+        if (auth()->user()->role === 'admin') {
+            return back()->withErrors(['borrow' => 'Administrators cannot borrow books.']);
+        }
+
         // Get authenticated user ID
         $userId = auth()->id();
         $book = Book::findOrFail($bookId);

@@ -423,8 +423,12 @@
             <div class="header-nav">
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ route('books.index') }}" class="btn btn-outline">Browse Books</a>
-                        <a href="{{ route('borrows.index') }}" class="btn btn-outline">My Borrows</a>
+                        @if(auth()->user()->role === 'admin')
+                            <a href="{{ route('books.index') }}" class="btn btn-outline">🔧 Manage Books</a>
+                        @else
+                            <a href="{{ route('books.index') }}" class="btn btn-outline">📚 Browse Books</a>
+                            <a href="{{ route('borrows.index') }}" class="btn btn-outline">My Borrows</a>
+                        @endif
                         <a href="{{ route('profile.edit') }}" class="btn btn-outline">Profile</a>
                         <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                             @csrf
@@ -547,7 +551,11 @@
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">📋 Recent Activity</h2>
-                <a href="{{ route('borrows.index') }}" class="view-all">View All →</a>
+                @auth
+                    @if(auth()->user()->role !== 'admin')
+                        <a href="{{ route('borrows.index') }}" class="view-all">View All →</a>
+                    @endif
+                @endauth
             </div>
             @if(isset($recent_borrows) && $recent_borrows->count() > 0)
                 <ul class="activity-list">

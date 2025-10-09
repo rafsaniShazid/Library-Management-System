@@ -271,7 +271,15 @@
     <div class="container">
         <!-- Navigation -->
         <div class="nav-bar">
-            <a href="{{ route('books.index') }}" class="btn btn-outline">← Back to Books</a>
+            @auth
+                @if(auth()->user()->role === 'admin')
+                    <a href="{{ route('books.index') }}" class="btn btn-outline">← Back to Manage Books</a>
+                @else
+                    <a href="{{ route('books.index') }}" class="btn btn-outline">← Back to Browse Books</a>
+                @endif
+            @else
+                <a href="{{ route('books.index') }}" class="btn btn-outline">← Back to Books</a>
+            @endauth
         </div>
 
         <!-- Alert Messages -->

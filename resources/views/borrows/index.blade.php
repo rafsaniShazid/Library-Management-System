@@ -348,7 +348,11 @@
                 </div>
                 <div class="nav-links">
                     <a href="{{ route('dashboard') }}" class="btn btn-outline">← Dashboard</a>
-                    <a href="{{ route('books.index') }}" class="btn btn-primary">Browse Books</a>
+                    @if(auth()->user()->role === 'admin')
+                        <a href="{{ route('books.index') }}" class="btn btn-primary">🔧 Manage Books</a>
+                    @else
+                        <a href="{{ route('books.index') }}" class="btn btn-primary">📚 Browse Books</a>
+                    @endif
                 </div>
             </div>
         </div>
