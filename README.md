@@ -61,6 +61,22 @@ erDiagram
     BOOKS ||--o{ BORROWS : "is borrowed"
 ```
 
+---
+
+## 📊 Data Flow Diagram (DFD)
+
+For a comprehensive understanding of how data flows through the Library Management System, please refer to the **[Data Flow Diagram Documentation](DFD.md)**.
+
+The DFD documentation includes:
+- **Context Level DFD (Level 0)** - System overview with external entities
+- **Level 1 DFD** - Detailed process breakdown showing:
+  - Manage User Authentication
+  - Manage Books
+  - Manage Borrow & Return
+  - Search & Browse Books
+- Detailed process descriptions and data store specifications
+
+---
 
 ## 👥 Work Distribution
 - **Teammate 1** → Database (migrations, models, relationships)  
